@@ -1,0 +1,44 @@
+<script src="echarts.min4.js"></script>
+<script src="beijing.js"></script>
+
+<body>
+    <div id="box" style="width: 700px;height: 700px;margin: 0 auto;"></div>
+</body>
+<script type="text/javascript">
+    var chart = echarts.init(document.getElementById("box"));
+    var option = {
+        series: {
+            type: 'map',
+            map: '北京',
+            layoutCenter: ['50%', '50%'],
+            layoutSize: '100%',
+            label: {
+                normal: {
+                    show: true,
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        color: '#fff'
+                    }
+                }
+            },
+            itemStyle: {
+                normal: {
+                    areaColor: 'rgba(24,65,91,0.3)',
+                    borderColor: '#9DDCEB',
+                    borderWidth: 3,
+                    shadowColor: '#9DDCEB',
+                    shadowBlur: 20
+                },
+                emphasis: {
+                    areaColor: 'rgba(24,65,91,0.3)'
+                }
+            }
+        }
+    }
+    chart.setOption(option)
+</script>

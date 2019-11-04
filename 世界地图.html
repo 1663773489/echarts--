@@ -7,22 +7,24 @@
     <!-- 引入 echarts.js -->
     <script src="echarts.min4.js"></script>
     <script type="text/javascript" src="http://gallery.echartsjs.com/dep/echarts/map/js/world.js"></script>
-<style>
-    .position{
-        position: absolute;
-        height: 100px;
-        width: 100px;
-        background-color: rgb(197, 124, 124);
-        top:0;
-    }
-</style>
+    <style>
+        .position {
+            position: absolute;
+            height: 100px;
+            width: 100px;
+            background-color: rgb(197, 124, 124);
+            top: 0;
+        }
+    </style>
 </head>
 
 <body>
     <div>
-    <div id="main" style="width:1300px;height:800px;  ">
-   </div> 
-   <div class="position">position</div>
+        <div>
+            <div id="main" style="width:1300px;height:800px;  ">
+            </div>
+        </div>
+        <div class="position">position</div>
     </div>
     <script type="text/javascript">
         var myChart = echarts.init(document.getElementById('main'));
@@ -206,9 +208,9 @@
             "津巴布韦": [29.154857, -19.015438],
         };
         var Data = [
-            [{ name: "俄罗斯" }, { name: "美国", value: 110 }],
-            [{ name: '俄罗斯' }, { name: "中国", value: 90 }],
-            [{ name: '中国' }, { name: "俄罗斯", value: 70 }]
+            [{ name: "俄罗斯" }, { name: "美国", value: 1, type: "web攻击" }],
+            [{ name: '俄罗斯' }, { name: "中国", value: 2, type: "测试告警" }],
+            [{ name: '中国' }, { name: "俄罗斯", value: 3, type: "sql injection" }]
         ];
 
         var converData = function (data) {
@@ -230,6 +232,7 @@
         var color = ["blue", "yellow", "red"];
         var series = [];
         [['中国', Data]].forEach(function (item, i) {
+            console.log(converData(item[1]))
             series.push(
                 {
                     name: "攻击线路",
@@ -245,7 +248,7 @@
                     },
                     label: {
                         normal: {
-                            show: false
+                            show: true
                         },
                         emphasis: {}
                     },
@@ -279,21 +282,23 @@
                     },
                     label: {
                         normal: {
-                            show: false,
+                            show: true,
                             position: 'left',
                         }
                     },
                     itemStyle: {
                         normal: {
                             color: function (params) {
+                                console.log(params)
                                 let num1 = params.dataIndex
+                                console.log(num1)
                                 let num = Data[num1][1].value;
                                 console.log(num);
-                                if (num > 100) {
+                                if (num == 1) {
                                     return color[0];
-                                } else if (num > 80 && num < 100) {
+                                } else if (num == 2) {
                                     return color[1];
-                                } else if (num > 60 && num < 80) {
+                                } else if (num == 3) {
                                     return color[2];
                                 }
                             }
@@ -301,10 +306,13 @@
                     },
                     data: item[1].map(function (dataItem) {
                         console.log(item[1])
+                        console.log(dataItem)
+                        console.log(geoCoordMap[dataItem[1].name]);
+                        console.log()
                         return {
-                            name: dataItem[1].name,
+                            name: geoCoordMap[dataItem[1].name],
                             value: geoCoordMap[dataItem[1].name],
-                            symbolSize: dataItem[1].value / 8,
+                            symbolSize: 50
                         };
                     })
                 });
@@ -318,26 +326,20 @@
                 emphasis: { label: { show: true } }
             },
             itemStyle: {
-                        normal: {
-                            borderWidth: 0.5,
-                            borderColor: 'blue',
-                            label: {
-                                show: false
-                            },
-                            areaColor: '#323c48',
-                        },
-                        emphasis: {
-                            areaColor: 'red'
-                        }
+                normal: {
+                    borderWidth: 0.5,
+                    borderColor: 'blue',
+                    label: {
+                        show: false
                     },
+                    areaColor: '#323c48',
+                },
+                emphasis: {
+                    areaColor: 'red'
+                }
+            },
         })
         var option = {
-            title: {
-                text: "地图连接经纬度",
-                sublink: 'http://esa.un.org/wpp/Excel-Data/population.htm',
-                left: 'center',
-                top: 'top'
-            },
             geo: [
                 {
                     map: "world",
@@ -348,16 +350,17 @@
             ],
             tooltip: {
                 trigger: 'item',
-                position:'right',
+                position: 'right',
                 formatter: function (params) {
-                    let num = params.dataIndex;
-                    var value = (params.value + '').split('.');
-                    return params.seriesName + '<br/>' + params.name + ' : ' + num;
+                    let num1 = params.dataIndex
+                    console.log(num1)
+                    let num = Data[num1][1].type;
+                    return num + '<br/>'
                 },
             },
             series: series
         }
-myChart.setOption(option);
+        myChart.setOption(option);
     </script>
 </body>
 
